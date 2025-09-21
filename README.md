@@ -4,7 +4,7 @@ Man kan køre Program.cs i Rider.
 
 Man skal Indtaste username, password og userId i terminalen nederst.
 
-Regnler for login:
+Regler for login:
 
 userId > 65536
 
