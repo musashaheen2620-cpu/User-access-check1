@@ -2,36 +2,34 @@ class Program
 {
     static void Main()
     {
-        Console.Write("Enter username: ");
-        string username = Console.ReadLine();
+        Console.Write("Username: ");
+        string u = Console.ReadLine();
 
-        Console.Write("Enter password: ");
-        string password = Console.ReadLine();
+        Console.Write("Password: ");
+        string p = Console.ReadLine();
 
-        Console.Write("Enter userId: ");
-        uint userId = uint.Parse(Console.ReadLine());
+        Console.Write("UserId: ");
+        uint id = uint.Parse(Console.ReadLine());
 
-        bool userIsAdmin = userId > 65536;
-        bool usernameValid = username.Length >= 3;
-        bool passwordValid = (password.Contains('$') || password.Contains('|') || password.Contains('@')) &&
-                             (userIsAdmin ? password.Length >= 20 : password.Length >= 16);
+        bool isAdmin = id > 65536;
+        bool okUser = u.Length > 2;
+        bool okPwd = (p.IndexOfAny(new[] { '$', '|', '@' }) >= 0) &&
+                     (p.Length >= (isAdmin ? 20 : 16));
 
-        if (usernameValid && passwordValid)
+        if (okUser && okPwd)
         {
             Console.WriteLine("Access granted!");
-            Console.WriteLine(userIsAdmin ? "Welcome, administrator." : "Welcome, user.");
+            Console.WriteLine(isAdmin ? "Welcome, admin." : "Welcome, user.");
         }
         else
         {
             Console.WriteLine("Access denied.");
-            if (!usernameValid) Console.WriteLine("Username must be at least 3 characters long.");
-            if (!(password.Contains('$') || password.Contains('|') || password.Contains('@')))
-                Console.WriteLine("Password must contain $, | or @.");
-            if (userIsAdmin && password.Length < 20)
-                Console.WriteLine("Admin password must be at least 20 characters long.");
-            if (!userIsAdmin && password.Length < 16)
-                Console.WriteLine("Password must be at least 16 characters long.");
+            if (!okUser) Console.WriteLine("Username too short.");
+            if (p.IndexOfAny(new[] { '$', '|', '@' }) < 0) Console.WriteLine("Password missing $, | or @.");
+            if (isAdmin && p.Length < 20) Console.WriteLine("Admin password must be ≥ 20 chars.");
+            if (!isAdmin && p.Length < 16) Console.WriteLine("Password must be ≥ 16 chars.");
         }
     }
 }
+
 
