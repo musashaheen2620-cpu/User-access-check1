@@ -3,33 +3,28 @@ class Program
     static void Main()
     {
         Console.Write("Username: ");
-        string u = Console.ReadLine();
+        var user = Console.ReadLine();
 
         Console.Write("Password: ");
-        string p = Console.ReadLine();
+        var pass = Console.ReadLine();
 
         Console.Write("UserId: ");
-        uint id = uint.Parse(Console.ReadLine());
+        var id = Convert.ToUInt32(Console.ReadLine());
 
-        bool isAdmin = id > 65536;
-        bool okUser = u.Length > 2;
-        bool okPwd = (p.IndexOfAny(new[] { '$', '|', '@' }) >= 0) &&
-                     (p.Length >= (isAdmin ? 20 : 16));
+        bool admin = id > 65536;
+        bool validUser = user.Length >= 3;
+        bool specialChar = pass.Contains("$") || pass.Contains("|") || pass.Contains("@");
+        int minLen = admin ? 20 : 16;
+        bool validPass = specialChar && pass.Length >= minLen;
 
-        if (okUser && okPwd)
-        {
-            Console.WriteLine("Access granted!");
-            Console.WriteLine(isAdmin ? "Welcome, admin." : "Welcome, user.");
-        }
+        if (validUser && validPass)
+            Console.WriteLine($"Access granted! Welcome {(admin ? "admin" : "user")}.");
         else
         {
             Console.WriteLine("Access denied.");
-            if (!okUser) Console.WriteLine("Username too short.");
-            if (p.IndexOfAny(new[] { '$', '|', '@' }) < 0) Console.WriteLine("Password missing $, | or @.");
-            if (isAdmin && p.Length < 20) Console.WriteLine("Admin password must be ≥ 20 chars.");
-            if (!isAdmin && p.Length < 16) Console.WriteLine("Password must be ≥ 16 chars.");
+            if (!validUser) Console.WriteLine("Username too short.");
+            if (!specialChar) Console.WriteLine("Password must contain $, | or @.");
+            if (pass.Length < minLen) Console.WriteLine($"Password must be at least {minLen} chars.");
         }
     }
 }
-
-
